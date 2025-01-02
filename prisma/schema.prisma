@@ -7,22 +7,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// User roles in the system
 model roles {
-  rol_id      Int          @id @default(autoincrement())
+  rol_id      Int           @id @default(autoincrement())
   description String
-  system      String
   status      Boolean
-  users       users[]       @relation("users_x_rol")
   users_x_rol users_x_rol[]
+  users       users[]       @relation("users_x_rol")
 
   @@map("roles")
 }
 
-// General log record
 model general_log {
   log_id    Int    @id @default(autoincrement())
-  system    String
   reference String
   user_id   String @db.VarChar(11)
   user      users  @relation(fields: [user_id], references: [dni])
@@ -31,47 +27,43 @@ model general_log {
   @@map("general_logs")
 }
 
-// System users
 model users {
-  dni            String  @id @db.VarChar(11)
-  name           String
-  first_surname  String
-  second_surname String
-  phone          Int?   
-  email          String  @unique
-  position       String
-  department     Int
-  status         Boolean
-  password       String
-
-  // Relaciones
-  incidents                  incidents[]
-  roles                      roles[]                      @relation("users_x_rol")
-  users_x_rol                users_x_rol[]
+  dni                        String                       @id @db.VarChar(11)
+  name                       String
+  first_surname              String
+  second_surname             String
+  phone                      String
+  email                      String                       @unique
+  departmentId               Int
+  status                     Boolean
+  password                   String
   diagnosis                  diagnoses[]
-  user_x_incident            user_x_incident[]
-  log_change_status_incident log_change_status_incident[]
   general_log                general_log[]
+  incidents                  incidents[]
+  log_change_status_incident log_change_status_incident[]
+  user_x_incident            user_x_incident[]
+  department                 departments                  @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  users_x_rol                users_x_rol[]
+  roles                      roles[]                      @relation("users_x_rol")
 
   @@index([email])
+  @@index([departmentId], map: "users_departmentId_fkey")
   @@map("users")
 }
 
-// Relationship between users and incidents
 model user_x_incident {
-  assign_code Int    @id @default(autoincrement())
-  user_dni    String @db.VarChar(11)
-  incident_id String @db.VarChar(12)
+  assign_code Int       @id @default(autoincrement())
+  user_dni    String    @db.VarChar(11)
+  incident_id String    @db.VarChar(12)
   assign_date DateTime
-
-  user     users     @relation(fields: [user_dni], references: [dni])
-  incident incidents @relation(fields: [incident_id], references: [incident_id])
+  incident    incidents @relation(fields: [incident_id], references: [incident_id])
+  user        users     @relation(fields: [user_dni], references: [dni])
 
   @@index([user_dni, incident_id])
+  @@index([incident_id], map: "user_x_incident_incident_id_fkey")
   @@map("user_x_incident")
 }
 
-// Recording status changes in incidents
 model log_change_status_incident {
   log_id         Int       @id @default(autoincrement())
   incident_id    String    @db.VarChar(12)
@@ -79,27 +71,25 @@ model log_change_status_incident {
   current_status Int
   previous_state Int
   user_dni       String    @db.VarChar(11)
-
-  incidents incidents @relation(fields: [incident_id], references: [incident_id])
-  user      users     @relation(fields: [user_dni], references: [dni])
+  incidents      incidents @relation(fields: [incident_id], references: [incident_id])
+  user           users     @relation(fields: [user_dni], references: [dni])
 
   @@index([incident_id, user_dni])
+  @@index([user_dni], map: "log_change_status_incidents_user_dni_fkey")
   @@map("log_change_status_incidents")
 }
 
-// Relation between users and roles
 model users_x_rol {
   user_dni String
   role_id  Int
-
-  user  users @relation(fields: [user_dni], references: [dni], onDelete: Cascade)
-  roles roles @relation(fields: [role_id], references: [rol_id], onDelete: Cascade)
+  roles    roles  @relation(fields: [role_id], references: [rol_id], onDelete: Cascade)
+  user     users  @relation(fields: [user_dni], references: [dni], onDelete: Cascade)
 
   @@id([user_dni, role_id])
+  @@index([role_id], map: "users_x_rol_role_id_fkey")
   @@map("users_x_rol")
 }
 
-// Incident effects
 model incident_effects {
   id          Int         @id @default(autoincrement())
   description String
@@ -108,7 +98,6 @@ model incident_effects {
   @@map("incident_effects")
 }
 
-// Incident Categories
 model incident_categories {
   id          Int         @id @default(autoincrement())
   description String
@@ -117,7 +106,6 @@ model incident_categories {
   @@map("incident_categories")
 }
 
-// Incident statuses
 model incident_status {
   id          Int         @id @default(autoincrement())
   description String
@@ -126,7 +114,6 @@ model incident_status {
   @@map("incident_status")
 }
 
-// Risks associated with incidents
 model incident_risks {
   id          Int         @id @default(autoincrement())
   description String
@@ -135,7 +122,6 @@ model incident_risks {
   @@map("incident_risks")
 }
 
-// Incident priorities
 model incident_priorities {
   id          Int         @id @default(autoincrement())
   description String
@@ -144,41 +130,40 @@ model incident_priorities {
   @@map("incident_priorities")
 }
 
-// Incidents recorded in the system
 model incidents {
-  incident_id         String   @id @db.VarChar(12)
-  name                String
-  description         String
-  close_justification String?
-  incident_place      String
-  record_date         DateTime
-  cost                Float
-  time_to_solve       Int
-
-  // Relations
-  user_dni String            @db.VarChar(11)
-  user     users             @relation(fields: [user_dni], references: [dni])
-  effect_id Int              @db.Int
-  effect    incident_effects @relation(fields: [effect_id], references: [id])
-  risk_id   Int              @db.Int
-  risk      incident_risks   @relation(fields: [risk_id], references: [id])
-  category_id Int            @db.Int
-  category    incident_categories @relation(fields: [category_id], references: [id])
-  priority_id Int            @db.Int
-  priority    incident_priorities @relation(fields: [priority_id], references: [id])
-  status_id Int              @db.Int
-  status    incident_status  @relation(fields: [status_id], references: [id])
-
+  incident_id                String                       @id @db.VarChar(12)
+  name                       String
+  description                String
+  close_justification        String?
+  incident_place             String
+  record_date                DateTime
+  cost                       Float
+  time_to_solve              Int
+  user_dni                   String                       @db.VarChar(11)
+  effect_id                  Int
+  risk_id                    Int
+  category_id                Int
+  priority_id                Int
+  status_id                  Int
   diagnosis                  diagnoses[]
-  user_x_incident            user_x_incident[]
+  category                   incident_categories          @relation(fields: [category_id], references: [id])
+  effect                     incident_effects             @relation(fields: [effect_id], references: [id])
+  priority                   incident_priorities          @relation(fields: [priority_id], references: [id])
+  risk                       incident_risks               @relation(fields: [risk_id], references: [id])
+  status                     incident_status              @relation(fields: [status_id], references: [id])
+  user                       users                        @relation(fields: [user_dni], references: [dni], onDelete: Cascade)
   log_change_status_incident log_change_status_incident[]
+  user_x_incident            user_x_incident[]
 
   @@index([user_dni])
   @@index([effect_id, risk_id, category_id, priority_id, status_id])
+  @@index([category_id], map: "incidents_category_id_fkey")
+  @@index([priority_id], map: "incidents_priority_id_fkey")
+  @@index([risk_id], map: "incidents_risk_id_fkey")
+  @@index([status_id], map: "incidents_status_id_fkey")
   @@map("incidents")
 }
 
-// Incident diagnoses
 model diagnoses {
   diagnosis_id   Int       @id @default(autoincrement())
   diagnosis_date DateTime
@@ -187,10 +172,17 @@ model diagnoses {
   observation    String
   buy            Boolean
   user_dni       String    @db.VarChar(11)
-  user           users     @relation(fields: [user_dni], references: [dni])
   incident_id    String    @db.VarChar(12)
   incident       incidents @relation(fields: [incident_id], references: [incident_id])
+  user           users     @relation(fields: [user_dni], references: [dni])
 
   @@index([user_dni, incident_id])
+  @@index([incident_id], map: "diagnosis_incident_id_fkey")
   @@map("diagnosis")
+}
+
+model departments {
+  id          Int     @id @default(autoincrement())
+  description String
+  user        users[]
 }

@@ -3,15 +3,18 @@
   "version": "1.0.0",
   "description": "This is a REST API to manage technical incidents",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "node ./src/app.ts",
     "dev": "nodemon ./src/app.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "prisma-seed": "tsx prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^6.1.0",
     "express": "^4.21.1",
     "mysql2": "^3.11.5",
     "swagger-jsdoc": "^6.2.8",
@@ -19,11 +22,13 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
+    "@faker-js/faker": "^9.3.0",
     "@types/express": "^5.0.0",
     "@types/node": "^22.10.1",
     "nodemon": "^3.1.7",
     "prisma": "^6.0.1",
     "ts-node": "^10.9.2",
+    "tsx": "^4.19.2",
     "typescript": "^5.7.2"
   }
 }
