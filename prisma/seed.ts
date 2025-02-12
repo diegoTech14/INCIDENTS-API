@@ -192,7 +192,7 @@ const incidents_seed: incidents[] = [
         record_date: faker.date.anytime(),
         cost: 0.0,
         time_to_solve: 5,
-        user_dni: (await Meta.first_user())?.dni || "",
+        user_dni: "03a11fcb-49",
         effect_id: 1,
         risk_id: 1,
         category_id: 2,
@@ -208,7 +208,7 @@ const incidents_seed: incidents[] = [
         record_date: faker.date.anytime(),
         cost: 0.0,
         time_to_solve: 5,
-        user_dni: (await Meta.first_user())?.dni || "",
+        user_dni: "99a11fcb-41",
         effect_id: 1,
         risk_id: 1,
         category_id: 2,
@@ -224,7 +224,7 @@ const incidents_seed: incidents[] = [
         record_date: faker.date.anytime(),
         cost: 0.0,
         time_to_solve: 5,
-        user_dni: (await Meta.first_user())?.dni || "",
+        user_dni: "34a33fcb-02",
         effect_id: 1,
         risk_id: 1,
         category_id: 2,
@@ -242,8 +242,8 @@ const diagnoses_seed: diagnoses[] = [
         estimated_time: 5,
         observation: "Not yet",
         buy: faker.datatype.boolean(),
-        user_dni: (await Meta.first_user())?.dni || "",
-        incident_id:(await Meta.first_incident())?.incident_id || ""
+        user_dni: "34a33fcb-02",
+        incident_id: "0000001-2024"
     },
     {
         diagnosis_id: 2,
@@ -252,8 +252,8 @@ const diagnoses_seed: diagnoses[] = [
         estimated_time: 5,
         observation: "Not yet",
         buy: faker.datatype.boolean(),
-        user_dni: (await Meta.first_user())?.dni || "",
-        incident_id:(await Meta.first_incident())?.incident_id || ""
+        user_dni: "03a11fcb-49",
+        incident_id: "0000002-2024"
     },
     {
         diagnosis_id: 3,
@@ -262,8 +262,8 @@ const diagnoses_seed: diagnoses[] = [
         estimated_time: 5,
         observation: "Still damaged",
         buy: faker.datatype.boolean(),
-        user_dni: (await Meta.first_user())?.dni || "",
-        incident_id:(await Meta.first_incident())?.incident_id || ""
+        user_dni: "99a11fcb-41",
+        incident_id: "0000003-2024"
     }
 ]
 

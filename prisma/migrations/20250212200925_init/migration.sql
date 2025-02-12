@@ -194,28 +194,28 @@ ALTER TABLE `users_x_rol` ADD CONSTRAINT `users_x_rol_role_id_fkey` FOREIGN KEY 
 ALTER TABLE `users_x_rol` ADD CONSTRAINT `users_x_rol_user_dni_fkey` FOREIGN KEY (`user_dni`) REFERENCES `users`(`dni`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `incidents` ADD CONSTRAINT `incidents_category_id_fkey` FOREIGN KEY (`category_id`) REFERENCES `incident_categories`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `incidents` ADD CONSTRAINT `incidents_category_id_fkey` FOREIGN KEY (`category_id`) REFERENCES `incident_categories`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `incidents` ADD CONSTRAINT `incidents_effect_id_fkey` FOREIGN KEY (`effect_id`) REFERENCES `incident_effects`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `incidents` ADD CONSTRAINT `incidents_effect_id_fkey` FOREIGN KEY (`effect_id`) REFERENCES `incident_effects`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `incidents` ADD CONSTRAINT `incidents_priority_id_fkey` FOREIGN KEY (`priority_id`) REFERENCES `incident_priorities`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `incidents` ADD CONSTRAINT `incidents_priority_id_fkey` FOREIGN KEY (`priority_id`) REFERENCES `incident_priorities`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `incidents` ADD CONSTRAINT `incidents_risk_id_fkey` FOREIGN KEY (`risk_id`) REFERENCES `incident_risks`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `incidents` ADD CONSTRAINT `incidents_risk_id_fkey` FOREIGN KEY (`risk_id`) REFERENCES `incident_risks`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `incidents` ADD CONSTRAINT `incidents_status_id_fkey` FOREIGN KEY (`status_id`) REFERENCES `incident_status`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `incidents` ADD CONSTRAINT `incidents_status_id_fkey` FOREIGN KEY (`status_id`) REFERENCES `incident_status`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `incidents` ADD CONSTRAINT `incidents_user_dni_fkey` FOREIGN KEY (`user_dni`) REFERENCES `users`(`dni`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `diagnosis` ADD CONSTRAINT `diagnosis_incident_id_fkey` FOREIGN KEY (`incident_id`) REFERENCES `incidents`(`incident_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `diagnosis` ADD CONSTRAINT `diagnosis_incident_id_fkey` FOREIGN KEY (`incident_id`) REFERENCES `incidents`(`incident_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `diagnosis` ADD CONSTRAINT `diagnosis_user_dni_fkey` FOREIGN KEY (`user_dni`) REFERENCES `users`(`dni`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `diagnosis` ADD CONSTRAINT `diagnosis_user_dni_fkey` FOREIGN KEY (`user_dni`) REFERENCES `users`(`dni`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `_users_x_rol` ADD CONSTRAINT `_users_x_rol_A_fkey` FOREIGN KEY (`A`) REFERENCES `roles`(`rol_id`) ON DELETE CASCADE ON UPDATE CASCADE;

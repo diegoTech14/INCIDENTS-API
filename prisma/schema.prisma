@@ -146,11 +146,11 @@ model incidents {
   priority_id                Int
   status_id                  Int
   diagnosis                  diagnoses[]
-  category                   incident_categories          @relation(fields: [category_id], references: [id])
-  effect                     incident_effects             @relation(fields: [effect_id], references: [id])
-  priority                   incident_priorities          @relation(fields: [priority_id], references: [id])
-  risk                       incident_risks               @relation(fields: [risk_id], references: [id])
-  status                     incident_status              @relation(fields: [status_id], references: [id])
+  category                   incident_categories          @relation(fields: [category_id], references: [id], onDelete: Cascade)
+  effect                     incident_effects             @relation(fields: [effect_id], references: [id], onDelete: Cascade)
+  priority                   incident_priorities          @relation(fields: [priority_id], references: [id], onDelete: Cascade)
+  risk                       incident_risks               @relation(fields: [risk_id], references: [id], onDelete: Cascade)
+  status                     incident_status              @relation(fields: [status_id], references: [id], onDelete: Cascade)
   user                       users                        @relation(fields: [user_dni], references: [dni], onDelete: Cascade)
   log_change_status_incident log_change_status_incident[]
   user_x_incident            user_x_incident[]
@@ -173,8 +173,8 @@ model diagnoses {
   buy            Boolean
   user_dni       String    @db.VarChar(11)
   incident_id    String    @db.VarChar(12)
-  incident       incidents @relation(fields: [incident_id], references: [incident_id])
-  user           users     @relation(fields: [user_dni], references: [dni])
+  incident       incidents @relation(fields: [incident_id], references: [incident_id], onDelete: Cascade)
+  user           users     @relation(fields: [user_dni], references: [dni], onDelete: Cascade)
 
   @@index([user_dni, incident_id])
   @@index([incident_id], map: "diagnosis_incident_id_fkey")
