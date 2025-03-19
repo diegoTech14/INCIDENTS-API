@@ -3,9 +3,8 @@
   "version": "1.0.0",
   "description": "This is a REST API to manage technical incidents",
   "main": "index.js",
-  "type": "module",
   "scripts": {
-    "start": "node ./src/app.ts",
+    "start": "npx tsx ./src/app.ts",
     "dev": "nodemon ./src/app.ts",
     "build": "tsc",
     "prisma-seed": "tsx prisma/seed.ts"
