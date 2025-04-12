@@ -1,4 +1,4 @@
-FROM node:20
+FROM node:18
 
 WORKDIR /app
 
@@ -14,4 +14,4 @@ RUN npx prisma generate
 
 EXPOSE 3000 
 
-CMD ["npm", "run", "dev"]
+CMD ["sh", "-c", "npm run db:dev && npm run dev"]

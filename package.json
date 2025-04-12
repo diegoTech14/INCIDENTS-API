@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "description": "This is a REST API to manage technical incidents",
   "main": "index.js",
+  "type":"module",
   "scripts": {
-    "start": "npx tsx ./src/app.ts",
-    "dev": "nodemon ./src/app.ts",
+    "start": "NODE_OPTIONS='--loader tsx' node ./src/app.ts",
+    "dev": "nodemon --exec \"node --loader tsx ./src/app.ts\"",
+    "db:dev":"npx prisma generate && npx prisma migrate dev && node --loader tsx prisma/seed.ts",
     "build": "tsc",
-    "prisma-seed": "tsx prisma/seed.ts"
+    "prisma-seed": "node --loader tsx prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
