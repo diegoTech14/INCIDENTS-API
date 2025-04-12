@@ -19,9 +19,9 @@ export class MetaSeed {
                     data: seed
                 });
             }
-            console.log(`Seed ${model} planted 🌱`)
+            console.log(`Seed ${model} planted 🌱`);
         }catch(error){
-            throw new Error("Failet during the seeded ❌");
+            throw new Error("Failed during the seeded ❌");
         }
 
     } 
