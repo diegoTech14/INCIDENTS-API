@@ -5,11 +5,11 @@
   "main": "index.js",
   "type":"module",
   "scripts": {
-    "start": "NODE_OPTIONS='--loader tsx' node ./src/app.ts",
-    "dev": "nodemon --exec \"node --loader tsx ./src/app.ts\"",
-    "db:dev":"npx prisma generate && npx prisma migrate dev && node --loader tsx prisma/seed.ts",
+    "start": "tsx ./src/app.ts",
+    "dev": "nodemon --exec tsx ./src/app.ts",
+    "db:dev":"npx prisma generate && npx prisma migrate dev && node tsx prisma/seed.ts",
     "build": "tsc",
-    "prisma-seed": "node --loader tsx prisma/seed.ts"
+    "prisma-seed": "node tsx prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
