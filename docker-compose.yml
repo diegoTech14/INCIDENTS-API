@@ -2,7 +2,7 @@ services:
   app:
     build: .
     container_name: incidents_app
-    restart: always
+    restart: on-failure
     ports:
       - "3000:3000"
     env_file:

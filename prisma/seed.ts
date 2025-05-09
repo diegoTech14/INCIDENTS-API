@@ -11,6 +11,7 @@ import {
     incident_priorities,
     incidents,
     diagnoses,
+    users_x_rol
 } from "@prisma/client";
 
 const Meta = new MetaSeed();
@@ -78,6 +79,21 @@ const roles_seed: roles[] = [
         description: faker.person.jobType(),
         status: faker.datatype.boolean(),
     }
+]
+
+const roles_x_users: users_x_rol[] = [
+    {
+        role_id:1,
+        user_dni: "03a11fcb-49",
+    },
+    {
+        role_id:3,
+        user_dni: "99a11fcb-41",
+    },
+    {
+        role_id:2,
+        user_dni: "03a11fcb-49",
+    },
 ]
 
 const incident_effects_seed: incident_effects[] = [
@@ -181,7 +197,6 @@ const incident_priorities_seed: incident_priorities[] = [
     },
 ]
 
-
 const incidents_seed: incidents[] = [
     {
         incident_id: "0000001-2024",
@@ -277,3 +292,4 @@ await Meta.generate_seed<incident_risks>("incident_risks", incident_risks_seed);
 await Meta.generate_seed<incident_priorities>("incident_priorities", incident_priorities_seed);
 await Meta.generate_seed<incidents>("incidents", incidents_seed);
 await Meta.generate_seed<diagnoses>("diagnoses", diagnoses_seed);
+await Meta.generate_seed<users_x_rol>("users_x_rol", roles_x_users);
