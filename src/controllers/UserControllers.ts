@@ -17,7 +17,7 @@ export const UserController = {
     (user) ? res.json(user) : res.status(404).json({ message: "User not found" })
   },
 
-  async createUser(req: Request, res: Response) {    
+  async createUser(req: Request, res: Response) {
     const newUser = await userService.createUser(req.body);
     res.status(201).json(newUser);
   },
@@ -31,4 +31,10 @@ export const UserController = {
     await userService.deleteUser(req.params.dni);
     res.status(204).send();
   },
+
+  async login(req: Request, res: Response) {
+    const { email, password } = req.body;
+    const login = await userService.login(email, password);
+    (login) ? res.status(202).json({ login: true }) : res.status(404).json({ login: false });
+  }
 };

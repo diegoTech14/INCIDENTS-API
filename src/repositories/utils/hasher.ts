@@ -9,9 +9,11 @@ export class Hasher {
         return this.passwordHash = bcrypt.hashSync(password, this.salt);
     }
 
-    compareHashes(password: string, hashedPassword: string) {
-        bcrypt.compare(password, hashedPassword, (err, res) => {
-            return res
+    async compareHashes(password: string, hashedPassword: string) {
+        return bcrypt.compare(password, hashedPassword)
+        .then(match => match)
+        .catch(err => {
+            return false;
         });
     }
 }

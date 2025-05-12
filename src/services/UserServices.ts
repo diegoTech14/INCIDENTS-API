@@ -3,13 +3,13 @@ import { users } from "@prisma/client";
 
 export class UserService {
 
-    constructor (private userRepository: IUserRepository) {}
+    constructor(private userRepository: IUserRepository) { }
 
     async getAllUsers(): Promise<users[]> {
         return this.userRepository.findAll();
     }
-    
-    async getUserById(dni: string): Promise<users| null> {
+
+    async getUserById(dni: string): Promise<users | null> {
         return this.userRepository.findById(dni);
     }
 
@@ -19,9 +19,13 @@ export class UserService {
 
     async updateUser(dni: string, user: Partial<users>): Promise<users> {
         return this.userRepository.update(dni, user);
-      }
-    
-      async deleteUser(dni: string): Promise<void> {
+    }
+
+    async deleteUser(dni: string): Promise<void> {
         return this.userRepository.delete(dni);
-      }
+    }
+
+    async login(email: string, password: string): Promise<boolean> { 
+        return this.userRepository.login(email, password);
+    }
 }
