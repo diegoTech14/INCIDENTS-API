@@ -9,5 +9,6 @@ usersRouter.post("/users", UserController.createUser);
 usersRouter.put("/users/:dni", UserController.updateUser);
 usersRouter.delete("/users/:dni", UserController.deleteUser);
 usersRouter.post("/users/authentication", UserController.login);
+usersRouter.post("/users/roles", UserController.addRoles);
 
 export default usersRouter;

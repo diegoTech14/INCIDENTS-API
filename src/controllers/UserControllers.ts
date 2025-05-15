@@ -36,5 +36,11 @@ export const UserController = {
     const { email, password } = req.body;
     const login = await userService.login(email, password);
     (login) ? res.status(202).json({ login: true }) : res.status(404).json({ login: false });
+  },
+
+  async addRoles(req: Request, res: Response) {
+    const {user_dni, roles} = req.body;
+    const userRoles = await userService.addRoles(roles, user_dni);
+    (userRoles) ? res.status(202).json({roles: true}): res.status(501).json({roles: false});
   }
 };

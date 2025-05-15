@@ -1,6 +1,8 @@
 import { PrismaClient, users } from "@prisma/client";
 import { IUserRepository } from "./IUserRepository";
-import { userCredentials } from "../interfaces/userInterfaces";
+import { userCredentials, roles } from "../interfaces/userInterfaces";
+import jwt from "jsonwebtoken";
+
 import { Hasher } from './utils/hasher';
 
 const prisma = new PrismaClient();
@@ -8,32 +10,75 @@ const prisma = new PrismaClient();
 export class UsersRepository implements IUserRepository {
 
   hasher = new Hasher();
+  userRoles!: roles[];
+
+  //This method returns all roles related to an specific user
+  private async getUserRolesByDNI(dni: string): Promise<roles[] | null> {
+    const roles = prisma.users_x_rol.findMany({
+      where: { user_dni: dni },
+      select: {
+        role_id: true
+      }
+    });
+    return roles;
+  }
 
   //This method validates user credentials from the database by email
   private async getCredentialsByEmail(email: string): Promise<userCredentials | null> {
     return prisma.users.findUnique({
       where: { email: email },
       select: {
-        email:true,
-        password: true,
+        dni: true,
+        email: true,
+        password: true
       }
     });
   }
 
   //This method validates the user authentication
-  async login(email: string, password: string): Promise<boolean | false> {
+  async login(email: string, password: string): Promise<string | null> {
 
-    let response!:boolean;
-    
     if (!email || !password) {
-      response = false;
-    }else{
-      const credentials = await this.getCredentialsByEmail(email);
-      if(credentials){
-        response = await this.hasher.compareHashes(password, credentials.password);
-      }
+      return null;
     }
-    return response;
+    const secret = process.env.SECRET_KEY;
+    if (!secret) {
+      throw new Error("SECRET_KEY is not configured");
+    }
+
+    try {
+      const credentials = await this.getCredentialsByEmail(email);
+      if (!credentials) {
+        return null;
+      }
+      await this.hasher.compareHashes(password, credentials.password);
+      const roles = await this.getUserRolesByDNI(credentials.dni);
+      return jwt.sign(
+        {
+          dni: credentials.dni,
+          roles: roles
+        },
+        secret, { expiresIn: "1h" }
+      );
+    } catch (error) {
+      return null;
+    }
+  }
+  
+  async addRoles(user_dni:string, roles:roles[]): Promise<boolean> {
+    
+    try{
+      for(const rol of roles) {
+        let userRol = await prisma.users_x_rol.create({
+          data:
+            {role_id: rol.role_id, user_dni:user_dni}
+        });
+      }
+      return true;
+    
+    }catch(error) {
+      return false;
+    }
   }
 
   async findAll(): Promise<users[]> {

@@ -1,4 +1,5 @@
 import { IUserRepository } from "../repositories/IUserRepository";
+import { roles } from "../interfaces/userInterfaces";
 import { users } from "@prisma/client";
 
 export class UserService {
@@ -25,7 +26,11 @@ export class UserService {
         return this.userRepository.delete(dni);
     }
 
-    async login(email: string, password: string): Promise<boolean> { 
+    async login(email: string, password: string): Promise<string | null> { 
         return this.userRepository.login(email, password);
+    }
+
+    async addRoles(roles: roles[], user_dni:string): Promise <boolean> { 
+        return this.userRepository.addRoles(user_dni, roles);
     }
 }
