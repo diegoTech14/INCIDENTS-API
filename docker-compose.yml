@@ -1,17 +1,4 @@
 services:
-  app:
-    build: .
-    container_name: incidents_app
-    restart: always
-    ports:
-      - "3000:3000"
-    env_file:
-      - .env
-    volumes:
-      - ./:/app
-      - /app/node_modules
-    depends_on:
-      - mysql
   mysql:
     image: mysql:8.0
     container_name: incidents_db
