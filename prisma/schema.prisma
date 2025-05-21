@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
@@ -45,11 +45,21 @@ model users {
   user_x_incident            user_x_incident[]
   department                 departments                  @relation(fields: [departmentId], references: [id], onDelete: Cascade)
   users_x_rol                users_x_rol[]
+  user_x_token               user_x_token[]
   roles                      roles[]                      @relation("users_x_rol")
 
   @@index([email])
   @@index([departmentId], map: "users_departmentId_fkey")
   @@map("users")
+}
+
+model user_x_token {
+  token    String @db.Text()
+  user_dni String 
+  user     users  @relation(fields: [user_dni], references: [dni])
+
+  @@id([user_dni, token(length: 500)])
+  @@map("user_x_token")
 }
 
 model user_x_incident {

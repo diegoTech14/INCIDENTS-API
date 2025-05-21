@@ -1,7 +1,10 @@
 export interface userCredentials { 
-    dni:string,
     email: string, 
     password: string,
+}
+
+export interface userIdentifier { 
+    dni: string
 }
 
 export interface roles { 

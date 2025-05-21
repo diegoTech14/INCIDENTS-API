@@ -39,8 +39,23 @@ export const UserController = {
   },
 
   async addRoles(req: Request, res: Response) {
-    const {user_dni, roles} = req.body;
+    const { user_dni, roles } = req.body;
     const userRoles = await userService.addRoles(roles, user_dni);
-    (userRoles) ? res.status(202).json({roles: true}): res.status(501).json({roles: false});
+    let statusCode = 0;
+
+    if (userRoles !== null) {
+      statusCode = 200;
+      res.status(statusCode).json({ roles: userRoles });
+    } else {
+      statusCode = 501;
+      res.status(statusCode).json({ roles: userRoles });
+    }
+  },
+
+  async generateToken(req: Request, res: Response) {
+    const {user_dni} = req.body;
+    const token = await userService.generateToken(user_dni);
+
+    (token) ? res.status(200).json({token:token}) : res.status(501).json({token: null}); 
   }
 };

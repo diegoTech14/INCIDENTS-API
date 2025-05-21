@@ -10,5 +10,6 @@ usersRouter.put("/users/:dni", UserController.updateUser);
 usersRouter.delete("/users/:dni", UserController.deleteUser);
 usersRouter.post("/users/authentication", UserController.login);
 usersRouter.post("/users/roles", UserController.addRoles);
+usersRouter.post("/users/token", UserController.generateToken);
 
 export default usersRouter;

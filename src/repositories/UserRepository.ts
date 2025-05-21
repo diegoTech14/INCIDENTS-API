@@ -1,6 +1,6 @@
 import { PrismaClient, users } from "@prisma/client";
 import { IUserRepository } from "./IUserRepository";
-import { userCredentials, roles } from "../interfaces/userInterfaces";
+import { userCredentials, userIdentifier, roles } from "../interfaces/userInterfaces";
 import jwt from "jsonwebtoken";
 
 import { Hasher } from './utils/hasher';
@@ -9,8 +9,8 @@ const prisma = new PrismaClient();
 
 export class UsersRepository implements IUserRepository {
 
-  hasher = new Hasher();
-  userRoles!: roles[];
+  hasher: Hasher = new Hasher();
+  private secret: string = process.env.SECRET_KEY || "";
 
   //This method returns all roles related to an specific user
   private async getUserRolesByDNI(dni: string): Promise<roles[] | null> {
@@ -24,7 +24,7 @@ export class UsersRepository implements IUserRepository {
   }
 
   //This method validates user credentials from the database by email
-  private async getCredentialsByEmail(email: string): Promise<userCredentials | null> {
+  private async getAuthDataByEmail(email: string): Promise<userCredentials | null> {
     return prisma.users.findUnique({
       where: { email: email },
       select: {
@@ -41,43 +41,85 @@ export class UsersRepository implements IUserRepository {
     if (!email || !password) {
       return null;
     }
-    const secret = process.env.SECRET_KEY;
-    if (!secret) {
+
+    //I can create an specific class to improve this repeated code
+    if (!this.secret) {
       throw new Error("SECRET_KEY is not configured");
     }
 
     try {
-      const credentials = await this.getCredentialsByEmail(email);
+      const credentials = await this.getAuthDataByEmail(email);
       if (!credentials) {
         return null;
       }
       await this.hasher.compareHashes(password, credentials.password);
-      const roles = await this.getUserRolesByDNI(credentials.dni);
-      return jwt.sign(
-        {
-          dni: credentials.dni,
-          roles: roles
-        },
-        secret, { expiresIn: "1h" }
-      );
+
+      return ""
     } catch (error) {
       return null;
     }
   }
-  
-  async addRoles(user_dni:string, roles:roles[]): Promise<boolean> {
-    
-    try{
-      for(const rol of roles) {
-        let userRol = await prisma.users_x_rol.create({
-          data:
-            {role_id: rol.role_id, user_dni:user_dni}
-        });
+
+  async addRoles(user_dni: string, roles: roles[]): Promise<roles[] | null> {
+
+    let rolesFlag = false;
+    let addedRoles = [];
+    const currentRoles = await this.getUserRolesByDNI(user_dni);
+
+    try {
+      for (const rol of roles) {
+        if (!currentRoles?.find(currentRole => currentRole.role_id === rol.role_id)) {
+          await prisma.users_x_rol.create({
+            data:
+              { role_id: rol.role_id, user_dni: user_dni }
+          });
+
+          addedRoles.push(rol);
+        };
+        rolesFlag = true;
       }
-      return true;
-    
-    }catch(error) {
-      return false;
+
+      if (rolesFlag) {
+        return addedRoles
+      } else {
+        return []
+      }
+
+    } catch (error) {
+      console.log(error)
+      return null;
+    }
+  }
+
+  async generateToken(user_dni: string): Promise<string | null> {
+
+    if (!this.secret) {
+      throw new Error("SECRET_KEY is not configured");
+    }
+
+    try {
+      const roles = await this.getUserRolesByDNI(user_dni);
+      let token = "";
+      if (roles) {
+        token = jwt.sign(
+          {
+            dni: user_dni,
+            roles: roles
+          },
+          this.secret, { expiresIn: "1h" }
+        );
+      }
+
+      await prisma.user_x_token.create({
+        data:{
+          user_dni:user_dni,
+          token:token
+        }
+      });
+
+      return token;
+    } catch (error) {
+      return null;
     }
   }
 
@@ -92,7 +134,7 @@ export class UsersRepository implements IUserRepository {
   }
 
   async create(user: users): Promise<users> {
-    const hashedPassword = this.hasher.hashPassword(user.password);
+    const hashedPassword = await this.hasher.hashPassword(user.password);
 
     const userWithHashedPassword = {
       ...user,

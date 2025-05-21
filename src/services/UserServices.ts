@@ -30,7 +30,11 @@ export class UserService {
         return this.userRepository.login(email, password);
     }
 
-    async addRoles(roles: roles[], user_dni:string): Promise <boolean> { 
+    async addRoles(roles: roles[], user_dni:string): Promise <roles[] | null> { 
         return this.userRepository.addRoles(user_dni, roles);
+    }
+
+    async generateToken(user_dni:string): Promise <string | null> {
+        return this.userRepository.generateToken(user_dni);
     }
 }

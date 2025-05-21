@@ -11,7 +11,8 @@ import {
     incident_priorities,
     incidents,
     diagnoses,
-    users_x_rol
+    users_x_rol,
+    user_x_token
 } from "@prisma/client";
 
 const Meta = new MetaSeed();
@@ -62,6 +63,22 @@ const user_seed: users[] = [
         password: faker.internet.password(),
     }
 ]
+
+const user_x_token: user_x_token[] = [
+    {
+        user_dni: "34a33fcb-02",
+        token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30"
+    },
+    {
+        user_dni: "03a11fcb-49",
+        token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30"
+    },
+    {
+        user_dni: "99a11fcb-41",
+        token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30"
+    }
+]
+
 
 const roles_seed: roles[] = [
     {
@@ -293,3 +310,4 @@ await Meta.generate_seed<incident_priorities>("incident_priorities", incident_pr
 await Meta.generate_seed<incidents>("incidents", incidents_seed);
 await Meta.generate_seed<diagnoses>("diagnoses", diagnoses_seed);
 await Meta.generate_seed<users_x_rol>("users_x_rol", roles_x_users);
+await Meta.generate_seed<user_x_token>("user_x_token", user_x_token);

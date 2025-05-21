@@ -5,7 +5,7 @@ export class Hasher {
     salt = bcrypt.genSaltSync(10);
     passwordHash!:string;
 
-    hashPassword(password: string) {
+    async hashPassword(password: string) {
         return this.passwordHash = bcrypt.hashSync(password, this.salt);
     }
 
