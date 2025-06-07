@@ -9,11 +9,12 @@ datasource db {
 }
 
 model roles {
-  rol_id      Int           @id @default(autoincrement())
-  description String
-  status      Boolean
-  users_x_rol users_x_rol[]
-  users       users[]       @relation("users_x_rol")
+  rol_id         Int              @id @default(autoincrement())
+  description    String
+  status         Boolean
+  users_x_rol    users_x_rol[]
+  users          users[]          @relation("users_x_rol")
+  routes_x_roles routes_x_roles[]
 
   @@map("roles")
 }
@@ -26,6 +27,25 @@ model general_log {
 
   @@index([user_id])
   @@map("general_logs")
+}
+
+model routes {
+  route_id       Int              @id @default(autoincrement())
+  route          String           @default("http://localhost:3000/api/")
+  http_method    String
+  routes_x_roles routes_x_roles[]
+
+  @@index([route_id])
+}
+
+model routes_x_roles {
+  route_id Int
+  role_id  Int
+  roles    roles  @relation(fields: [role_id], references: [rol_id], onDelete: Cascade)
+  route    routes @relation(fields: [route_id], references: [route_id], onDelete: Cascade)
+
+  @@id([route_id, role_id])
+  @@index([role_id], map: "users_x_rol_route_id_fkey")
 }
 
 model users {
@@ -55,7 +75,7 @@ model users {
 
 model user_x_token {
   token    String @db.Text()
-  user_dni String 
+  user_dni String
   user     users  @relation(fields: [user_dni], references: [dni])
 
   @@id([user_dni, token(length: 500)])

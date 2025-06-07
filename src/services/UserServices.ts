@@ -1,5 +1,5 @@
 import { IUserRepository } from "../repositories/IUserRepository";
-import { roles } from "../interfaces/userInterfaces";
+import { roles, roleRoute } from "../interfaces/userInterfaces";
 import { users } from "@prisma/client";
 
 export class UserService {
@@ -26,7 +26,7 @@ export class UserService {
         return this.userRepository.delete(dni);
     }
 
-    async login(email: string, password: string): Promise<string | null> { 
+    async login(email: string, password: string): Promise<boolean | false> { 
         return this.userRepository.login(email, password);
     }
 
@@ -36,5 +36,9 @@ export class UserService {
 
     async generateToken(user_dni:string): Promise <string | null> {
         return this.userRepository.generateToken(user_dni);
+    }
+
+    async getRouteRoles(route: string, http_method: string): Promise<roleRoute[] | null> {
+        return this.getRouteRoles(route, http_method);
     }
 }

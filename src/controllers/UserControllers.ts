@@ -7,6 +7,7 @@ const userRepository = new UsersRepository();
 const userService = new UserService(userRepository);
 
 export const UserController = {
+  
   async getAllUsers(req: Request, res: Response) {
     const users = await userService.getAllUsers();
     res.json(users);
@@ -53,9 +54,10 @@ export const UserController = {
   },
 
   async generateToken(req: Request, res: Response) {
-    const {user_dni} = req.body;
+    const { user_dni } = req.body;
     const token = await userService.generateToken(user_dni);
 
-    (token) ? res.status(200).json({token:token}) : res.status(501).json({token: null}); 
+    (token) ? res.status(200).json({ token: token }) : res.status(501).json({ token: null });
   }
+
 };

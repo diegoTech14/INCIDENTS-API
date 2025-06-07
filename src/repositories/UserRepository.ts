@@ -1,16 +1,16 @@
 import { PrismaClient, users } from "@prisma/client";
 import { IUserRepository } from "./IUserRepository";
-import { userCredentials, userIdentifier, roles } from "../interfaces/userInterfaces";
-import jwt from "jsonwebtoken";
+import { userCredentials, roles, roleRoute } from "../interfaces/userInterfaces";
 
-import { Hasher } from './utils/hasher';
+import { Hasher } from '../utils/hasher';
+import { JwtController } from '../utils/jwtController';
 
 const prisma = new PrismaClient();
 
 export class UsersRepository implements IUserRepository {
 
   hasher: Hasher = new Hasher();
-  private secret: string = process.env.SECRET_KEY || "";
+  jwt: JwtController = new JwtController();
 
   //This method returns all roles related to an specific user
   private async getUserRolesByDNI(dni: string): Promise<roles[] | null> {
@@ -36,27 +36,23 @@ export class UsersRepository implements IUserRepository {
   }
 
   //This method validates the user authentication
-  async login(email: string, password: string): Promise<string | null> {
+  async login(email: string, password: string): Promise<boolean | false> {
 
     if (!email || !password) {
-      return null;
+      return false;
     }
 
     //I can create an specific class to improve this repeated code
-    if (!this.secret) {
-      throw new Error("SECRET_KEY is not configured");
-    }
-
     try {
       const credentials = await this.getAuthDataByEmail(email);
       if (!credentials) {
-        return null;
+        return false;
       }
       await this.hasher.compareHashes(password, credentials.password);
 
-      return ""
+      return true
     } catch (error) {
-      return null;
+      return false;
     }
   }
 
@@ -93,27 +89,22 @@ export class UsersRepository implements IUserRepository {
 
   async generateToken(user_dni: string): Promise<string | null> {
 
-    if (!this.secret) {
-      throw new Error("SECRET_KEY is not configured");
-    }
-
     try {
       const roles = await this.getUserRolesByDNI(user_dni);
-      let token = "";
+      let token: string | null = "";
+
       if (roles) {
-        token = jwt.sign(
-          {
-            dni: user_dni,
-            roles: roles
-          },
-          this.secret, { expiresIn: "1h" }
-        );
+        token = await this.jwt.jwtEncoder({ user_dni, roles });
+      }
+
+      if (!token) {
+        return null
       }
 
       await prisma.user_x_token.create({
-        data:{
-          user_dni:user_dni,
-          token:token
+        data: {
+          user_dni: user_dni,
+          token: token
         }
       });
 

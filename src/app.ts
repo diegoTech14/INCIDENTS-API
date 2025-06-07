@@ -7,7 +7,6 @@ import { PORT } from './config';
 
 const app: Application = express();
 
-//middleware to allow json object only for POST requests
 app.use(jsonForPosts);
 app.use(authorization);
 

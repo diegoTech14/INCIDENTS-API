@@ -1,8 +1,8 @@
 import { users } from "@prisma/client";
-import { roles } from "../interfaces/userInterfaces";
+import { roles, roleRoute } from "../interfaces/userInterfaces";
 
 export interface IUserRepository {
-    login(email: string, password: string): Promise<string | null>;
+    login(email: string, password: string): Promise<boolean | false>;
     addRoles(user_dni: string, roles: roles[]): Promise<roles[] | null>;
     generateToken(user_dni: string): Promise<string | null>;
     findAll(): Promise<users[]>;

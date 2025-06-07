@@ -1,5 +1,5 @@
 import { MetaSeed } from "./meta-seed";
-import { faker } from "@faker-js/faker";
+import { faker, ro, th } from "@faker-js/faker";
 import {
     departments,
     incident_effects,
@@ -12,10 +12,12 @@ import {
     incidents,
     diagnoses,
     users_x_rol,
-    user_x_token
+    user_x_token,
+    routes_x_roles,
+    routes
 } from "@prisma/client";
 
-const Meta = new MetaSeed();
+const Meta: MetaSeed = new MetaSeed();
 
 const department_seed: departments[] = [
     {
@@ -100,15 +102,15 @@ const roles_seed: roles[] = [
 
 const roles_x_users: users_x_rol[] = [
     {
-        role_id:1,
+        role_id: 1,
         user_dni: "03a11fcb-49",
     },
     {
-        role_id:3,
+        role_id: 3,
         user_dni: "99a11fcb-41",
     },
     {
-        role_id:2,
+        role_id: 2,
         user_dni: "03a11fcb-49",
     },
 ]
@@ -270,7 +272,7 @@ const diagnoses_seed: diagnoses[] = [
     {
         diagnosis_id: 1,
         diagnosis_date: faker.date.anytime(),
-        diagnosis:"Pipe damage grade 2",
+        diagnosis: "Pipe damage grade 2",
         estimated_time: 5,
         observation: "Not yet",
         buy: faker.datatype.boolean(),
@@ -280,7 +282,7 @@ const diagnoses_seed: diagnoses[] = [
     {
         diagnosis_id: 2,
         diagnosis_date: faker.date.anytime(),
-        diagnosis:"Pipe damage grade 2",
+        diagnosis: "Pipe damage grade 2",
         estimated_time: 5,
         observation: "Not yet",
         buy: faker.datatype.boolean(),
@@ -290,12 +292,138 @@ const diagnoses_seed: diagnoses[] = [
     {
         diagnosis_id: 3,
         diagnosis_date: faker.date.anytime(),
-        diagnosis:"Pipe damage grade 2",
+        diagnosis: "Pipe damage grade 2",
         estimated_time: 5,
         observation: "Still damaged",
         buy: faker.datatype.boolean(),
         user_dni: "99a11fcb-41",
         incident_id: "0000003-2024"
+    }
+]
+
+const routes: routes[] = [
+    {
+        route_id: 1,
+        http_method: "GET",
+        route: "/api/users"
+    },
+    {
+        route_id: 2,
+        http_method: "GET",
+        route: "/api/users/:dni"
+    },
+    {
+        route_id: 3,
+        http_method: "POST",
+        route: "/api/users"
+    },
+    {
+        route_id: 4,
+        http_method: "PUT",
+        route: "/api/users/:dni"
+    },
+    {
+        route_id: 5,
+        http_method: "DELETE",
+        route: "/api/users/:dni"
+    },
+    {
+        route_id: 6,
+        http_method: "POST",
+        route: "/api/users/authentication"
+    },
+    {
+        route_id: 7,
+        http_method: "POST",
+        route: "/api/users/roles"
+    },
+    {
+        route_id: 8,
+        http_method: "POST",
+        route: "/api/users/token"
+    },
+]
+
+const routes_x_roles: routes_x_roles[] = [
+    {
+        route_id:1,
+        role_id:1,
+    },
+    {
+        route_id:1,
+        role_id:2,
+    },
+    {
+        route_id:2,
+        role_id:1,
+    },
+    {
+        route_id:2,
+        role_id:2,
+    },
+    {
+        route_id:3,
+        role_id:1,
+    },
+    {
+        route_id:3,
+        role_id:2,
+    },
+    {
+        route_id:4,
+        role_id:1,
+    },
+    {
+        route_id:4,
+        role_id:2,
+    },
+    {
+        route_id:4,
+        role_id:3,
+    },
+        {
+        route_id:5,
+        role_id:1,
+    },
+    {
+        route_id:5,
+        role_id:2,
+    },
+    {
+        route_id:6,
+        role_id:1,
+    },
+    {
+        route_id:6,
+        role_id:2,
+    },
+    {
+        route_id:6,
+        role_id:3,
+    },
+    {
+        route_id:7,
+        role_id:1,
+    },
+    {
+        route_id:7,
+        role_id:2,
+    },
+    {
+        route_id:7,
+        role_id:3,
+    },
+    {
+        route_id:8,
+        role_id:1,
+    },
+    {
+        route_id:8,
+        role_id:2,
+    },
+    {
+        route_id:8,
+        role_id:3,
     }
 ]
 
@@ -311,3 +439,5 @@ await Meta.generate_seed<incidents>("incidents", incidents_seed);
 await Meta.generate_seed<diagnoses>("diagnoses", diagnoses_seed);
 await Meta.generate_seed<users_x_rol>("users_x_rol", roles_x_users);
 await Meta.generate_seed<user_x_token>("user_x_token", user_x_token);
+await Meta.generate_seed<routes>("routes",routes);
+await Meta.generate_seed<routes_x_roles>("routes_x_roles",routes_x_roles);

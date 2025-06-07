@@ -10,3 +10,12 @@ export interface userIdentifier {
 export interface roles { 
     role_id: number
 }
+
+export interface jwtPayload {
+    user_dni: string, 
+    roles: roles[]
+}
+
+export interface roleRoute { 
+    role_id:number
+}
