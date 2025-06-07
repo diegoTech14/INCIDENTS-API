@@ -2,23 +2,20 @@ import { Request, Response } from "express";
 import { UserService } from "../services/UserServices";
 import { UsersRepository } from "../repositories/UserRepository";
 
+
 const userRepository = new UsersRepository();
 const userService = new UserService(userRepository);
 
 export const UserController = {
+  
   async getAllUsers(req: Request, res: Response) {
     const users = await userService.getAllUsers();
     res.json(users);
   },
 
   async getUserById(req: Request, res: Response) {
-    const dni = "009-dbe-58";
-    const user = await userService.getUserById(dni);
-    if (user) {
-      res.json(user);
-    } else {
-      res.status(404).json({ message: "User not found" });
-    }
+    const user = await userService.getUserById(req.params.dni);
+    (user) ? res.json(user) : res.status(404).json({ message: "User not found" })
   },
 
   async createUser(req: Request, res: Response) {
@@ -27,14 +24,40 @@ export const UserController = {
   },
 
   async updateUser(req: Request, res: Response) {
-    const dni = "009-dbe-58";
-    const updatedUser = await userService.updateUser(dni, req.body);
+    const updatedUser = await userService.updateUser(req.params.dni, req.body);
     res.json(updatedUser);
   },
 
   async deleteUser(req: Request, res: Response) {
-    const dni = "009-dbe-58";
-    await userService.deleteUser(dni);
+    await userService.deleteUser(req.params.dni);
     res.status(204).send();
   },
+
+  async login(req: Request, res: Response) {
+    const { email, password } = req.body;
+    const login = await userService.login(email, password);
+    (login) ? res.status(202).json({ login: true }) : res.status(404).json({ login: false });
+  },
+
+  async addRoles(req: Request, res: Response) {
+    const { user_dni, roles } = req.body;
+    const userRoles = await userService.addRoles(roles, user_dni);
+    let statusCode = 0;
+
+    if (userRoles !== null) {
+      statusCode = 200;
+      res.status(statusCode).json({ roles: userRoles });
+    } else {
+      statusCode = 501;
+      res.status(statusCode).json({ roles: userRoles });
+    }
+  },
+
+  async generateToken(req: Request, res: Response) {
+    const { user_dni } = req.body;
+    const token = await userService.generateToken(user_dni);
+
+    (token) ? res.status(200).json({ token: token }) : res.status(501).json({ token: null });
+  }
+
 };
