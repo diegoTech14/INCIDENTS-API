@@ -8,8 +8,7 @@
     "start": "tsx ./src/app.ts",
     "dev": "nodemon --exec \"tsx ./src/app.ts\" --delay 1 --signal SIGTERM --exitcrash",
     "db:dev": "npx prisma generate && npx prisma migrate dev && tsx prisma/seed.ts",
-    "build": "tsc",
-    "prisma-seed": "tsx prisma/seed.ts"
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
