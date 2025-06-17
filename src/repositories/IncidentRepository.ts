@@ -21,8 +21,8 @@ export class IncidentRepository implements IIncidentsRepository{
         return prisma.incidents.update({ where: { incident_id }, data: incident });
       }
     
-      async delete(incident_id: string): Promise<void> {
-        await prisma.incidents.delete({ where: { incident_id } });
+      async delete(incident_id: string): Promise<incidents | null> {
+        return prisma.incidents.delete({ where: { incident_id } });
       }
 
       async findByUserId(user_dni: string): Promise<incidents[] | null> {

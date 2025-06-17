@@ -21,7 +21,7 @@ export class IncidentsService {
         return this.incidentRepository.update(incident_id, incident);
     }
 
-    async deleteIncident(incident_id: string): Promise<void> {
+    async deleteIncident(incident_id: string): Promise<incidents | null> {
         return this.incidentRepository.delete(incident_id);
     }
 

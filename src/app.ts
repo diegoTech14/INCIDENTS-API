@@ -8,7 +8,7 @@ import { PORT } from './config';
 const app: Application = express();
 
 app.use(jsonForPosts);
-app.use(authorization);
+//app.use(authorization);
 
 app.use('/api', usersRouter);
 app.use('/api', incidentRoutes);

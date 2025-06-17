@@ -15,13 +15,8 @@ export const IncidentControllers = {
     },
 
     async getIncidentById(req: Request, res: Response) {
-        const incident_id = "0000001-2024";
-        const incident = await incidentService.getIncidentById(incident_id);
-        if (incident) {
-            res.json(incident);
-        } else {
-            res.status(404).json({ message: "Incident not found" });
-        }
+        const incident = await incidentService.getIncidentById(req.params.id);
+        (incident) ? res.json(incident) : res.status(404).json({ message: "Incident not found" })
     },
 
     async createIncident(req: Request, res: Response) {
@@ -30,15 +25,13 @@ export const IncidentControllers = {
     },
 
     async updateIncident(req: Request, res: Response) {
-        const incident_id = "0000002-2024";
-        const updatedIncident = await incidentService.updateIncident(incident_id, req.body);
-        res.json(updatedIncident);
+        const updatedIncident = await incidentService.updateIncident(req.params.id, req.body);
+        (updatedIncident) ? res.json(updatedIncident) : res.status(404).json({ message: "Incident not found" })
     },
 
     async deleteIncident(req: Request, res: Response) {
-        const incident_id = "0000003-2024";
-        await incidentService.deleteIncident(incident_id);
-        res.status(204).send();
+        const deletedIncident = await incidentService.deleteIncident(req.params.id);
+        (deletedIncident) ? res.json(deletedIncident) : res.status(404).json({ message: "Incident not found" })
     },
 
     async findByUserId(req: Request, res: Response){

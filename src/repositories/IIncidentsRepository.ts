@@ -5,7 +5,7 @@ export interface IIncidentsRepository {
     findById(incident_id: string): Promise<incidents | null>;
     create(Incident: incidents): Promise<incidents>
     update(incident_id: string, user: Partial<incidents>): Promise<incidents>;
-    delete(incident_id: string): Promise<void>;
+    delete(incident_id: string): Promise<incidents | null>;
     findByUserId(user_dni: string): Promise<incidents[] | null>;
     findByRiskId(risk_id:number): Promise<incidents[] | null>;
     findByCategoryId(category_id:number): Promise<incidents[] | null>;
