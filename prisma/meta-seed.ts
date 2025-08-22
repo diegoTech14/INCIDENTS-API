@@ -23,7 +23,6 @@ export class MetaSeed {
         }catch(error){
             throw new Error("Failed during the seeded ❌");
         }
-
     } 
 }
 

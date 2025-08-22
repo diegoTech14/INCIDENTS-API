@@ -17,6 +17,10 @@ export class MiddlewareQueries {
             if (routeSegments.length >= 3 && routeSegments[1] === 'users' && routeSegments[2].match(this.pattern)) {
                 routeSegments[2] = ":dni";
             }
+
+            if (routeSegments.length >= 3 && routeSegments[1] === 'incidents' && routeSegments[2].match(this.pattern)) {
+                routeSegments[2] = ":id";
+            }
             response = "/" + routeSegments.join("/");
         }
 

@@ -81,7 +81,6 @@ const user_x_token: user_x_token[] = [
     }
 ]
 
-
 const roles_seed: roles[] = [
     {
         rol_id: 1,
@@ -342,6 +341,31 @@ const routes: routes[] = [
         http_method: "POST",
         route: "/api/users/token"
     },
+    {
+        route_id:9,
+        http_method:"GET",
+        route: "/api/incidents/:id"
+    },
+    {
+        route_id:10,
+        http_method:"GET",
+        route:"/api/incidents/"
+    },
+    {
+        route_id:11,
+        http_method:"POST",
+        route:"/api/incidents/"
+    },
+    {
+        route_id:12,
+        http_method:"PUT",
+        route:"/api/incidents/:id"
+    },
+    {
+        route_id:13,
+        http_method:"DELETE",
+        route:"/api/incidents/:id"
+    }
 ]
 
 const routes_x_roles: routes_x_roles[] = [
@@ -424,7 +448,59 @@ const routes_x_roles: routes_x_roles[] = [
     {
         route_id:8,
         role_id:3,
-    }
+    },
+    {
+        route_id:9,
+        role_id:1
+    },
+        {
+        route_id:9,
+        role_id:2
+    },
+        {
+        route_id:10,
+        role_id:1
+    },
+        {
+        route_id:10,
+        role_id:2
+    },
+        {
+        route_id:11,
+        role_id:1
+    },
+        {
+        route_id:11,
+        role_id:2
+    },
+        {
+        route_id:11,
+        role_id:3
+    },
+        {
+        route_id:12,
+        role_id:1
+    },
+        {
+        route_id:12,
+        role_id:2
+    },
+        {
+        route_id:12,
+        role_id:3
+    },
+    {
+        route_id:13,
+        role_id:1
+    },
+        {
+        route_id:13,
+        role_id:2
+    },
+        {
+        route_id:13,
+        role_id:3
+    },
 ]
 
 await Meta.generate_seed<departments>("departments", department_seed);

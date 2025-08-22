@@ -21,8 +21,31 @@ export class IncidentsService {
         return this.incidentRepository.update(incident_id, incident);
     }
 
-    async deleteIncident(incident_id: string): Promise<void> {
+    async deleteIncident(incident_id: string): Promise<incidents | null> {
         return this.incidentRepository.delete(incident_id);
     }
 
+    async findByUserId(user_dni:string): Promise<incidents[] | null>{
+        return this.findByUserId(user_dni);
+    }
+
+    async findByRiskId(risk_id:number): Promise<incidents[] | null>{
+        return this.findByRiskId(risk_id);
+    }
+
+    async findByCategoryId(category_id:number): Promise<incidents[] | null>{
+        return this.findByCategoryId(category_id);
+    }
+
+    async findByPriorityId(priority_id:number): Promise<incidents[] | null>{
+        return this.findByPriorityId(priority_id);
+    }
+
+    async findByStatusId(status_id:number): Promise<incidents[] | null>{
+        return this.findByStatusId(status_id);
+    }
+
+    async findByRecordDate(record_date:Date): Promise<incidents[] | null>{
+        return this.findByRecordDate(record_date);
+    }
 }
